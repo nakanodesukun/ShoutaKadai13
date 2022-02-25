@@ -7,29 +7,49 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource {
-    let date: [String] = ["りんご", "みかん", "バナナ", "パイナップル"]
+class ViewController: UIViewController{
+    // 構造体で定義した値を格納
+    private var fruits: [FruitsItems] = []
 
-    @IBOutlet var tableView: UITableView!
+//    var delegate: FruitsDelegate?
+
+    private let ImageName = "checkMark"
+
+    @IBOutlet private var tableView: UITableView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        date.count
+        dataLord()
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CoustomCell
-        cell.displayLabel.text = date[indexPath.row]
-//        cell.checkMarkImage.imageView!.image = UIImage(named: "checkMark")
-       
-        if  indexPath.row % 2 == 1 {
-            cell.checkMarkImage.image = UIImage(named: "checkMark")
-        }
-        return cell
-
+    private func dataLord() {
+        fruits.append(FruitsItems.init(fruitName: "りんご", imageViewString: ""))
+        fruits.append(FruitsItems.init(fruitName: "みかん", imageViewString: ImageName))
+        fruits.append(FruitsItems.init(fruitName: "バナナ", imageViewString: ""))
+        fruits.append(FruitsItems.init(fruitName: "パイナップル", imageViewString: ImageName))
     }
 
-   
 }
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        fruits.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        let fruitsName = fruits[indexPath.row].fruitName
+        let checkMark =  fruits[indexPath.row].imageViewString
+        cell.configure(titleName: fruitsName, imageViewName: checkMark)
+        return cell
+    }
+}
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // セルの選択解除
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+
+
